@@ -36,3 +36,18 @@ pip install tensorflow_probability==0.12.2 tensorflow-addons==0.14.0 keras openc
 
 
 ```
+
+## tf convert to onnx
+
+```
+//创建虚拟环境
+conda create -n tf python=3.8
+
+//激活环境
+conda activate tf
+
+//安装tensorflow 以及相关库
+conda install tensorflow-gpu
+pip install git+https://github.com/onnx/tensorflow-onnx
+
+```
