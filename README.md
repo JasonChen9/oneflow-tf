@@ -22,7 +22,7 @@ pip install mxnet-mkl==1.6.0 numpy==1.23.1
 
 ```
 
-## onnx convert to flow
+## onnx convert to tf
 ```
 //创建虚拟环境
 conda create -n tf python=3.8
