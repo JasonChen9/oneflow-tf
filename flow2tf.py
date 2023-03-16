@@ -1,3 +1,7 @@
+import oneflow as flow
+from oneflow import nn
+from flowvision.models import resnet50
+from oneflow_onnx.oneflow2onnx.util import convert_to_onnx_and_check
 import onnx
 from onnx_tf.backend import prepare
 import tensorflow as tf
@@ -7,6 +11,7 @@ import os
 import time
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
+model_path = "model/resnet50.onnx"
 
 def preprocess_image(img, input_hw=(224, 224)):
     h, w, _ = img.shape
@@ -32,11 +37,43 @@ def preprocess_image(img, input_hw=(224, 224)):
 
     return processed_img
 
+def save_flow_model_as_onnx():
+    class ResNet50Graph(nn.Graph):
+        def __init__(self, eager_model):
+            super().__init__()
+            self.model = eager_model
 
-if __name__ == '__main__':
+        def build(self, x):
+            return self.model(x)
+        # 模型参数存储目录
+    MODEL_PARAMS = 'model/checkpoints/resnet50'
+
+    # 下载预训练模型并保存
+    model = resnet50(pretrained=True)
+    flow.save(model.state_dict(), MODEL_PARAMS, save_as_external_data=True)
+
+    params = flow.load(MODEL_PARAMS)
+    model = resnet50()
+    model.load_state_dict(params)
+
+    # 将模型设置为 eval 模式
+    model.eval()
+
+    resnet50_graph = ResNet50Graph(model)
+    # 构建出静态图模型
+    resnet50_graph._compile(flow.randn(1, 3, 224, 224))
+
+    # 导出为 ONNX 模型并进行检查
+    convert_to_onnx_and_check(resnet50_graph,
+                              flow_weight_dir=MODEL_PARAMS,
+                              onnx_model_path=model_path,
+                              print_outlier=True,
+                              dynamic_batch_size=True)
+
+def load_onnx_model_as_tf():
     with tf.device('/GPU:0'):
-        with open('imagenet-classes.txt') as f:
-            img_path = '../img/cat.jpg'
+        with open('model/imagenet-classes.txt') as f:
+            img_path = 'img/cat.jpg'
 
             img = cv2.imread(img_path, cv2.IMREAD_COLOR)
             img = preprocess_image(img)
@@ -44,7 +81,7 @@ if __name__ == '__main__':
             # load model
             time_start = time.time()
             onnx_model = onnx.load(
-                "../flow2onnx/model.onnx")  # load onnx model
+                model_path)  # load onnx model
             time_end = time.time()
             print('prepare time cost', (time_end-time_start), 's')
 
@@ -70,3 +107,7 @@ if __name__ == '__main__':
             # out label
             CLASS_NAMES = f.readlines()
             print(CLASS_NAMES[np.argmax(out[0])])
+
+if __name__ == '__main__':
+    save_flow_model_as_onnx()
+    load_onnx_model_as_tf()
