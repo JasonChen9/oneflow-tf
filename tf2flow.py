@@ -6,7 +6,6 @@ from tensorflow.keras.applications.resnet50 import preprocess_input, decode_pred
 import numpy as np
 import tf2onnx
 import onnxruntime as rt
-# import oneflow as torch
 import torch
 from onnx2torch import convert
 import cv2
@@ -51,7 +50,7 @@ def load_onnx_to_flow_model():
 
     with open('model/imagenet-classes.txt') as f:
         CLASS_NAMES = f.readlines()
-        print(CLASS_NAMES[np.argmax(out_torch.detach().numpy()[0])])
+        print('OneFlow Predicted:', CLASS_NAMES[np.argmax(out_torch.detach().numpy()[0])])
 
 if __name__ == '__main__':
     save_tf_model_as_onnx()

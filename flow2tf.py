@@ -106,7 +106,7 @@ def load_onnx_model_as_tf():
 
             # out label
             CLASS_NAMES = f.readlines()
-            print(CLASS_NAMES[np.argmax(out[0])])
+            print('TF Predicted:', CLASS_NAMES[np.argmax(out[0])])
 
 if __name__ == '__main__':
     save_flow_model_as_onnx()
