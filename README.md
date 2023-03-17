@@ -41,9 +41,11 @@ python flow2tf.py
 ```
 
 
-## tf convert to torch
+## tf convert to flow
 
 ```
+//开启mock
+eval $(oneflow-mock-torch --lazy)
 python tf2flow.py
 
 ```
