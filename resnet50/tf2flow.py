@@ -11,8 +11,8 @@ from onnx2torch import convert
 import cv2
 
 
-img_path = "img/cat.jpg"
-onnx_model_path = "model/tf2flow_resnet50.onnx"
+img_path = "../img/cat.jpg"
+onnx_model_path = "../model/tf2flow_resnet50.onnx"
 def save_tf_model_as_onnx():
     img = image.load_img(img_path, target_size=(224, 224))
     x = image.img_to_array(img)
@@ -48,7 +48,7 @@ def load_onnx_to_flow_model():
     img = torch.from_numpy(x.copy())
     out_torch = torch_model(img)
 
-    with open('model/imagenet-classes.txt') as f:
+    with open('../model/imagenet-classes.txt') as f:
         CLASS_NAMES = f.readlines()
         print('OneFlow Predicted:', CLASS_NAMES[np.argmax(out_torch.detach().numpy()[0])])
 
