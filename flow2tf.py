@@ -11,7 +11,7 @@ import os
 import time
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
-model_path = "model/resnet50.onnx"
+model_path = "model/flow2tf_resnet50.onnx"
 
 def preprocess_image(img, input_hw=(224, 224)):
     h, w, _ = img.shape
@@ -46,7 +46,7 @@ def save_flow_model_as_onnx():
         def build(self, x):
             return self.model(x)
         # 模型参数存储目录
-    MODEL_PARAMS = 'model/checkpoints/resnet50'
+    MODEL_PARAMS = 'model/checkpoints/flow2tf_resnet50'
 
     # 下载预训练模型并保存
     model = resnet50(pretrained=True)

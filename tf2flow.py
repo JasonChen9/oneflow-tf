@@ -12,7 +12,7 @@ import cv2
 
 
 img_path = "img/cat.jpg"
-onnx_model_path = "model/resnet.onnx"
+onnx_model_path = "model/tf2flow_resnet50.onnx"
 def save_tf_model_as_onnx():
     img = image.load_img(img_path, target_size=(224, 224))
     x = image.img_to_array(img)
