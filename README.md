@@ -8,7 +8,7 @@ conda create -n flow-pt-tf python=3.8
 //激活环境
 conda activate flow-pt-tf
 
-//安装oneflow 相关库
+//安装oneflow tensorflow相关库
 python3 -m pip install --pre oneflow -f https://staging.oneflow.info/branch/master/cu117
 conda install cudnn
 pip install flowvision
@@ -23,7 +23,8 @@ pip install oneflow_onnx
 pip install onnx_tf
 pip install -U tf2onnx
 pip install onnx2torch
-pip install git+https://github.com/JasonChen9/onnx2torch
+pip install git+https://github.com/JasonChen9/onnx2torch.git
+pip install git+https://github.com/JasonChen9/onnx2pytorch.git
 ```
 在python/oneflow/mock_torch/__init__.py:234 添加一段代码：
 ```
