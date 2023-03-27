@@ -26,16 +26,6 @@ pip install onnx2torch
 pip install git+https://github.com/JasonChen9/onnx2torch.git
 pip install git+https://github.com/JasonChen9/onnx2pytorch.git
 ```
-在python/oneflow/mock_torch/__init__.py:234 添加一段代码：
-```
-    def __bool__(self):
-        if _importer.verbose:
-            print(
-                f'"{self.__name__}" is a dummy object, and its bool value is accessed.'
-            )
-        return False
-
-```
 ## flow convert to tf
 ```
 python flow2tf.py
