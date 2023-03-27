@@ -23,20 +23,38 @@ pip install oneflow_onnx
 pip install onnx_tf
 pip install -U tf2onnx
 pip install onnx2torch
+//转换过程使用到根据oneflow对齐的转化工具
 pip install git+https://github.com/JasonChen9/onnx2torch.git
 pip install git+https://github.com/JasonChen9/onnx2pytorch.git
 ```
-## flow convert to tf
+
+## resnet50 
+### oneflow convert to tensorflow
 ```
-python flow2tf.py
+python resnet50/flow2tf.py
 ```
 
-
-## tf convert to flow
+### tensorflow convert to oneflow
 
 ```
 //开启mock
 eval $(oneflow-mock-torch --lazy)
-python tf2flow.py
+python resnet50/tf2flow.py
+```
 
+## gpt2
+
+### oneflow convert to tensorflow
+```
+//使用libai运行gpt2并进行转化 
+//复制gpt2/flow2tf.py文件到libai/libai/onnx_export/gpt2_to_onnx.py  
+//运行流程参照 https://github.com/Oneflow-Inc/OneTeam/issues/1946#issuecomment-1475897927
+```
+
+### tensorflow convert to oneflow
+
+```
+//开启mock
+eval $(oneflow-mock-torch --lazy)
+python gpt2/tf2flow.py
 ```
