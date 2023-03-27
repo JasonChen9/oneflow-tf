@@ -18,7 +18,7 @@ def save_tf_model_as_onnx():
 
     model.save_pretrained("../model/checkpoints/tfgpt2model", saved_model=True)
 
-    command = "python -m tf2onnx.convert --saved-model ../model/checkpoints/tfgpt2model/saved_model/1 --opset 10  --output ../model/tf2flow_gpt2.onnx"
+    command = "python -m tf2onnx.convert --saved-model ../model/checkpoints/tfgpt2model/saved_model/1 --opset 11  --output ../model/tf2flow_gpt2.onnx"
 
     os.system(command)
 
