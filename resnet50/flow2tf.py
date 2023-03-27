@@ -73,7 +73,7 @@ def save_flow_model_as_onnx():
 def load_onnx_model_as_tf():
     with tf.device('/CPU:0'):
         with open('../model/imagenet-classes.txt') as f:
-            img_path = 'img/cat.jpg'
+            img_path = '../img/cat.jpg'
 
             img = cv2.imread(img_path, cv2.IMREAD_COLOR)
             img = preprocess_image(img)
