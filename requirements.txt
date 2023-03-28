@@ -74,14 +74,10 @@ nvidia-nccl-cu11==2.14.3
 nvidia-nvtx-cu11==11.7.91
 oauthlib==3.2.2
 omegaconf==2.1.0
-oneflow==0.9.1.dev20230315+cu117
-oneflow-onnx @ git+https://github.com/Oneflow-Inc/oneflow_convert.git@6bb9b54dcfa78eaaddaa117b8af423ab328451cb
 onefx==0.0.3
 onnx==1.13.1
 onnx-simplifier==0.4.17
 onnx-tf==1.10.0
-onnx2pytorch @ git+https://github.com/JasonChen9/onnx2pytorch.git@551dbb1234c1bd96425345c4f0fc3c70e1a798a7
-onnx2torch @ git+https://github.com/JasonChen9/onnx2torch.git@7f22c42c9261bb464ddff6e27ad59bcc7db93b5d
 onnxruntime==1.14.1
 opencv-python==4.7.0.72
 opt-einsum==3.3.0
