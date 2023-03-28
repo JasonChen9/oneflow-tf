@@ -8,7 +8,7 @@ conda create -n flow-pt-tf python=3.8
 //激活环境
 conda activate flow-pt-tf
 
-//安装oneflow tensorflow相关库
+//安装相关依赖库
 python3 -m pip install --pre oneflow -f https://staging.oneflow.info/branch/master/cu117
 while read requirement; do  pip install $requirement -i https://pypi.tuna.tsinghua.edu.cn/simple; done < requirements.txt
 pip install git+https://github.com/Oneflow-Inc/oneflow_convert.git
