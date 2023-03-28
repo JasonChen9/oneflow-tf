@@ -10,7 +10,7 @@ conda activate flow-pt-tf
 
 //安装oneflow tensorflow相关库
 python3 -m pip install --pre oneflow -f https://staging.oneflow.info/branch/master/cu117
-conda install --yes --file requirements.txt
+while read requirement; do  pip install $requirement -i https://pypi.tuna.tsinghua.edu.cn/simple; done < requirements.txt
 
 //oneflow 可以无缝使用pytorch的库, 所以可以通过onnx2torch来实现onnx模型转化为oneflow模型
 pip install git+https://github.com/JasonChen9/onnx2torch.git
