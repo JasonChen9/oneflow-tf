@@ -10,20 +10,9 @@ conda activate flow-pt-tf
 
 //安装oneflow tensorflow相关库
 python3 -m pip install --pre oneflow -f https://staging.oneflow.info/branch/master/cu117
-conda install cudnn
-pip install flowvision
-pip install oneflow-onnx
-pip install mxnet-mkl==1.6.0 numpy==1.23.1
-pip install tensorflow-cpu
-pip install tensorflow_probability==0.12.2 tensorflow-addons==0.14.0 keras opencv-python onnxruntime
+conda install --yes --file requirements.txt
 
-//安装转化需要的库
-pip install onefx
-pip install oneflow_onnx
-pip install onnx_tf
-pip install -U tf2onnx
-pip install onnx2torch
-//转换过程使用到根据oneflow对齐的转化工具
+//oneflow 可以无缝使用pytorch的库, 所以可以通过onnx2torch来实现onnx模型转化为oneflow模型
 pip install git+https://github.com/JasonChen9/onnx2torch.git
 pip install git+https://github.com/JasonChen9/onnx2pytorch.git
 ```
@@ -58,3 +47,5 @@ python resnet50/tf2flow.py
 eval $(oneflow-mock-torch --lazy)
 python gpt2/tf2flow.py
 ```
+
+

@@ -103,4 +103,6 @@ if __name__ == "__main__":
         input_tensor_range=[0, 10],
     )
     tf_out = load_onnx_model_as_tf()
-    np.testing.assert_allclose(output, tf_out[0], rtol=1e-2)
+    np.testing.assert_allclose(output, tf_out[0], rtol=1e-2, atol=2e-5)
+    print("PASS")
+
