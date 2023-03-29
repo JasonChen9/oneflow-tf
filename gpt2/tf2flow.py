@@ -24,8 +24,8 @@ def save_tf_model_as_onnx():
 
 def load_onnx_to_flow_model():
     onnx_model = onnx.load("../model/tf2flow_gpt2.onnx")
-    pytorch_model = ConvertModel(onnx_model)
-    output = pytorch_model(
+    flow_model = ConvertModel(onnx_model)
+    output = flow_model(
         attention_mask=torch.ones([1,5], dtype=torch.int32),
         input_ids=torch.ones([1,5], dtype=torch.int32)
     )
