@@ -1,13 +1,17 @@
 import oneflow as flow
 from oneflow import nn
 from flowvision.models import resnet50
-import numpy as np
+from oneflow_onnx.oneflow2onnx.util import convert_to_onnx_and_check
 import cv2
+import numpy as np
+from onnx2torch import convert
+import torch
 import os
-import time
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 model_path = "../model/flow2tf_resnet50.onnx"
+img_path = "../img/cat.jpg"
+
 
 def preprocess_image(img, input_hw=(224, 224)):
     h, w, _ = img.shape
@@ -33,7 +37,8 @@ def preprocess_image(img, input_hw=(224, 224)):
 
     return processed_img
 
-def run_flow_model():
+
+def save_flow_model_as_onnx():
     class ResNet50Graph(nn.Graph):
         def __init__(self, eager_model):
             super().__init__()
@@ -56,17 +61,31 @@ def run_flow_model():
     model.eval()
 
     resnet50_graph = ResNet50Graph(model)
-    with open('../model/imagenet-classes.txt') as f:
-        img_path = '../img/cat.jpg'
+    # 构建出静态图模型
+    resnet50_graph._compile(flow.randn(1, 3, 224, 224))
 
-        img = cv2.imread(img_path, cv2.IMREAD_COLOR)
-        img = preprocess_image(img)
-        img = flow.from_numpy(img)
-        out = resnet50_graph(img)
-        # out label
+    # 导出为 ONNX 模型并进行检查
+    convert_to_onnx_and_check(resnet50_graph,
+                              flow_weight_dir=MODEL_PARAMS,
+                              onnx_model_path=model_path,
+                              print_outlier=True,
+                              dynamic_batch_size=True)
+
+
+def load_onnx_model_as_pt():
+    torch_model = convert(model_path)
+    img = cv2.imread(img_path, cv2.IMREAD_COLOR)
+    img = preprocess_image(img)
+
+    img = torch.from_numpy(img.copy())
+    out_torch = torch_model(img)
+
+    with open('../model/imagenet-classes.txt') as f:
         CLASS_NAMES = f.readlines()
-        print('Predicted:', CLASS_NAMES[np.argmax(out[0])])
+        print('OneFlow Predicted:',
+              CLASS_NAMES[np.argmax(out_torch.detach().numpy()[0])])
 
 
 if __name__ == '__main__':
-    run_flow_model()
+    save_flow_model_as_onnx()
+    load_onnx_model_as_pt()
