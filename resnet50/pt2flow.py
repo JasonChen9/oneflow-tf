@@ -8,8 +8,8 @@ import numpy as np
 import cv2
 from onnx2torch import convert
 
-img_path = "../img/cat.jpg"
 onnx_model_path = "../model/pt2flow_resnet50.onnx"
+img_path = "../img/cat.jpg"
 
 def preprocess_image(img, input_hw=(224, 224)):
     h, w, _ = img.shape
@@ -41,7 +41,6 @@ def save_pt_model_as_onnx():
     model = resnet50(weights=weights)
     model.eval()
 
-    # preprocess = weights.transforms()
     img = cv2.imread(img_path, cv2.IMREAD_COLOR)
     img = preprocess_image(img)
 
@@ -49,14 +48,14 @@ def save_pt_model_as_onnx():
 
     output = model(img)
 
-    torch.onnx.export(model,               # model being run
-                  img,                         # model input (or a tuple for multiple inputs)
-                  onnx_model_path,   # where to save the model (can be a file or file-like object)
-                  export_params=True,        # store the trained parameter weights inside the model file
-                  opset_version=13,          # the ONNX version to export the model to
-                  do_constant_folding=True,  # whether to execute constant folding for optimization
-                  input_names = ['input'],   # the model's input names
-                  output_names = ['output'], # the model's output names
+    torch.onnx.export(model,               
+                  img,                         
+                  onnx_model_path,   
+                  export_params=True,        
+                  opset_version=13,          
+                  do_constant_folding=True,  
+                  input_names = ['input'],   
+                  output_names = ['output'], 
             )
     with open('../model/imagenet-classes.txt') as f:
         CLASS_NAMES = f.readlines()

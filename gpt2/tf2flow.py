@@ -8,7 +8,7 @@ import numpy as np
 import onnx
 from onnx2pytorch import ConvertModel
 
-
+onnx_model_path = "../model/tf2flow_gpt2.onnx"
 def save_tf_model_as_onnx():
     model = TFGPT2LMHeadModel.from_pretrained("gpt2")
 
@@ -23,7 +23,7 @@ def save_tf_model_as_onnx():
     os.system(command)
 
 def load_onnx_to_flow_model():
-    onnx_model = onnx.load("../model/tf2flow_gpt2.onnx")
+    onnx_model = onnx.load(onnx_model_path)
     flow_model = ConvertModel(onnx_model)
     output = flow_model(
         attention_mask=torch.ones([1,5], dtype=torch.int32),
@@ -31,7 +31,7 @@ def load_onnx_to_flow_model():
     )
 
     providers = ['CPUExecutionProvider']
-    m = rt.InferenceSession("../model/tf2flow_gpt2.onnx", providers=providers)
+    m = rt.InferenceSession(onnx_model_path, providers=providers)
     onnx_pred = m.run(['logits', 'past_key_values'], {"attention_mask": np.ones([1,5], dtype=np.int32),"input_ids":np.ones([1,5], dtype=np.int32)})
     
     np.testing.assert_allclose(output[0].detach().numpy(), onnx_pred[0], rtol=1e-2)

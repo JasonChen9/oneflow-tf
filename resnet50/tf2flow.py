@@ -36,7 +36,6 @@ def save_tf_model_as_onnx():
 
     print('ONNX Predicted:', decode_predictions(onnx_pred[0], top=3)[0])
 
-    # make sure ONNX and keras have the same results
     np.testing.assert_allclose(preds, onnx_pred[0], rtol=1e-3)
 
 def load_onnx_to_flow_model():

@@ -12,7 +12,6 @@ os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 model_path = "../model/flow2tf_resnet50.onnx"
 img_path = "../img/cat.jpg"
 
-
 def preprocess_image(img, input_hw=(224, 224)):
     h, w, _ = img.shape
 
