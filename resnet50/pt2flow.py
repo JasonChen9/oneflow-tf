@@ -5,6 +5,7 @@ import os
 import onnx
 from onnx2pytorch import ConvertModel
 import oneflow.mock_torch as mock
+import numpy as np
 
 img = read_image("../img/cat.jpg")
 
@@ -41,7 +42,9 @@ def load_onnx_model_as_flow():
     # os.system("eval $(oneflow-mock-torch disable)")
 
 if __name__ == '__main__':
-    save_pt_model_as_onnx()
-    # with mock.enable():
-    #     load_onnx_model_as_flow()
+    pt_out = save_pt_model_as_onnx()
+    with mock.enable():
+        flow_out = load_onnx_model_as_flow()
+    np.testing.assert_allclose(pt_out, flow_out, rtol=1e-2, atol=2e-5)
+    print("PASS")
 
