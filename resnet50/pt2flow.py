@@ -17,14 +17,14 @@ def save_pt_model_as_onnx():
 
     batch = preprocess(img).unsqueeze(0)
 
-    # prediction = model(batch).squeeze(0).softmax(0)
-    prediction = model(batch)
-    torch.onnx.export(model, batch, '../model/pt2flow_resnet50')
+    prediction = model(batch).squeeze(0).softmax(0)
+    # prediction = model(batch)
+    # torch.onnx.export(model, batch, '../model/pt2flow_resnet50')
 
-    # class_id = prediction.argmax().item()
+    class_id = prediction.argmax().item()
     # score = prediction[class_id].item()
-    # category_name = weights.meta["categories"][class_id]
-    # print(category_name)
+    category_name = weights.meta["categories"][class_id]
+    print(category_name)
 
 def load_onnx_model_as_flow():
     # os.system("eval $(oneflow-mock-torch --lazy --verbose)")
@@ -42,6 +42,6 @@ def load_onnx_model_as_flow():
 
 if __name__ == '__main__':
     save_pt_model_as_onnx()
-    with mock.enable():
-        load_onnx_model_as_flow()
+    # with mock.enable():
+    #     load_onnx_model_as_flow()
 

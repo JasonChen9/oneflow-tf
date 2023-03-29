@@ -2,7 +2,7 @@ import torch
 from transformers import GPT2LMHeadModel
 
 import os
-import onnxruntime as rt
+import onnxruntime as rtE
 import numpy as np
 import onnx
 from onnx2pytorch import ConvertModel
@@ -10,8 +10,10 @@ import oneflow.mock_torch as mock
 
 def save_pt_model_as_onnx():
     model = GPT2LMHeadModel.from_pretrained("gpt2")
-    torch.onnx.export(model, torch.ones([1, 5], dtype=torch.int32), "torch-model.onnx", export_params=True,
-                      opset_version=11, operator_export_type=torch.onnx.OperatorExportTypes.ONNX_ATEN_FALLBACK)
+    output = model(torch.zeros([1,5], dtype=torch.int32))
+    print("pt: ",output[0])
+    # torch.onnx.export(model, torch.ones([1, 5], dtype=torch.int32), "torch-model.onnx", export_params=True,
+    #                   opset_version=11, operator_export_type=torch.onnx.OperatorExportTypes.ONNX_ATEN_FALLBACK)
     
 def load_onnx_model_as_flow():
     # os.system("eval $(oneflow-mock-torch --lazy --verbose)")
@@ -31,6 +33,7 @@ def load_onnx_model_as_flow():
 
 if __name__ == '__main__':
     save_pt_model_as_onnx()
-    with mock.enable():
-        load_onnx_model_as_flow()
+
+    # with mock.enable():
+    #     load_onnx_model_as_flow()
 
