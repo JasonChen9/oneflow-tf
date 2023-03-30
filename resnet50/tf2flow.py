@@ -1,4 +1,3 @@
-import os
 import tensorflow as tf
 from tensorflow.keras.applications.resnet50 import ResNet50
 from tensorflow.keras.preprocessing import image
@@ -8,8 +7,6 @@ import tf2onnx
 import onnxruntime as rt
 import torch
 from onnx2torch import convert
-import cv2
-
 
 img_path = "../img/cat.jpg"
 onnx_model_path = "../model/tf2flow_resnet50.onnx"

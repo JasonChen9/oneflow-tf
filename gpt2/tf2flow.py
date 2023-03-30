@@ -1,4 +1,3 @@
-from transformers import TFGPT2LMHeadModel
 import tensorflow as tf
 import tf2onnx
 import torch
@@ -7,6 +6,7 @@ import onnxruntime as rt
 import numpy as np
 import onnx
 from onnx2pytorch import ConvertModel
+from transformers import TFGPT2LMHeadModel
 
 onnx_model_path = "../model/tf2flow_gpt2.onnx"
 def save_tf_model_as_onnx():

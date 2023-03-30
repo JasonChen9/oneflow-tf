@@ -35,6 +35,17 @@ eval $(oneflow-mock-torch --lazy)
 python resnet50/tf2flow.py
 ```
 
+### oneflow convert to pytorch
+```
+python resnet50/flow2pt.py
+```
+
+
+### pytorch convert to oneflow
+```
+python resnet50/test_pt2flow.py
+``` 
+
 ## gpt2
 
 ### oneflow convert to tensorflow
@@ -65,4 +76,13 @@ eval $(oneflow-mock-torch --lazy)
 python gpt2/tf2flow.py
 ```
 
+### oneflow convert to pytorch
+```
+python gpt2/flow2pt.py
+```
 
+
+### pytorch convert to oneflow
+```
+python gpt2/test_pt2flow.py
+``` 

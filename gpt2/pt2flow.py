@@ -1,7 +1,7 @@
-import numpy as np
 import torch
-from transformers import GPT2LMHeadModel
+import numpy as np
 import oneflow as flow
+from transformers import GPT2LMHeadModel
 
 def save_pt_model_as_onnx():
     model = GPT2LMHeadModel.from_pretrained("gpt2")

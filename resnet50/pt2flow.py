@@ -1,10 +1,9 @@
-from torchvision.io import read_image
-from torchvision.models import resnet50, ResNet50_Weights
 import torch 
 import oneflow as flow
 import numpy as np
 import cv2
 from onnx2torch import convert
+from torchvision.models import resnet50, ResNet50_Weights
 
 onnx_model_path = "../model/pt2flow_resnet50.onnx"
 img_path = "../img/cat.jpg"

@@ -1,9 +1,9 @@
-import onnx
-from onnx2torch import convert
 import torch
+import onnx
 import numpy as np
-from onnx_tf.backend import prepare
 import tensorflow as tf
+from onnx2torch import convert
+from onnx_tf.backend import prepare
 
 def load_onnx_model_as_pt():
     torch_model = convert(
