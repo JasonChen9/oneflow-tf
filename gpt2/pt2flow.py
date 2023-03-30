@@ -12,7 +12,6 @@ def save_pt_model_as_onnx():
         path = "../model/pt2flow_gpt2_flow.npy"
     else:
         path = "../model/pt2flow_gpt2_pt.npy"
-    print(path)
     np.save(path, output)
     return output
 

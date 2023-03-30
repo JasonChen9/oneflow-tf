@@ -1,9 +1,7 @@
 from torchvision.io import read_image
 from torchvision.models import resnet50, ResNet50_Weights
 import torch 
-import os
-import onnx
-import oneflow.mock_torch as mock
+import oneflow as flow
 import numpy as np
 import cv2
 from onnx2torch import convert
@@ -61,29 +59,29 @@ def save_pt_model_as_onnx():
         CLASS_NAMES = f.readlines()
         print('PT Predicted:',
             CLASS_NAMES[np.argmax(output.detach().numpy()[0])])
+    np.save("../model/pt2flow_resnet50_pt.npy", output.detach().numpy()[0])
     return output.detach().numpy()
 
 
 def load_onnx_model_as_flow():
-    # with mock.enable():
-    #     import torch
     torch_model = convert(onnx_model_path)
     img = cv2.imread(img_path, cv2.IMREAD_COLOR)
     img = preprocess_image(img)
 
     img = torch.from_numpy(img.copy())
-    out_torch = torch_model(img)
+    output = torch_model(img)
 
     with open('../model/imagenet-classes.txt') as f:
         CLASS_NAMES = f.readlines()
         print('OneFlow Predicted:',
-            CLASS_NAMES[np.argmax(out_torch.detach().numpy()[0])])
-    return out_torch.detach().numpy()
+            CLASS_NAMES[np.argmax(output.detach().numpy()[0])])
+    np.save("../model/pt2flow_resnet50_flow.npy", output.detach().numpy()[0])
+    return output.detach().numpy()
 
 if __name__ == '__main__':
-    pt_out = save_pt_model_as_onnx()
-    flow_out = load_onnx_model_as_flow()
-    np.testing.assert_allclose(pt_out, flow_out, rtol=1e-2, atol=2e-5)
-    print("PASS")
+    if(isinstance(torch.zeros(2, 3), flow.Tensor)):
+        load_onnx_model_as_flow()
+    else:
+        save_pt_model_as_onnx()
 
 
