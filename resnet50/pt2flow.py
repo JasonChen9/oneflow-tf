@@ -63,11 +63,14 @@ def save_pt_model_as_onnx():
 
 
 def load_onnx_model_as_flow():
+    is_oneflow = isinstance(torch.zeros(2, 3), flow.Tensor)
+    device = 'mlu' if is_oneflow else 'cpu'
     torch_model = convert(onnx_model_path)
+    torch_model = torch_model.to(device)
     img = cv2.imread(img_path, cv2.IMREAD_COLOR)
     img = preprocess_image(img)
 
-    img = torch.from_numpy(img.copy())
+    img = torch.from_numpy(img.copy()).to(device)
     output = torch_model(img)
 
     with open('../model/imagenet-classes.txt') as f:
