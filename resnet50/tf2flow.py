@@ -7,6 +7,8 @@ import tf2onnx
 import onnxruntime as rt
 import torch
 from onnx2torch import convert
+import onnx
+import onnxsim
 
 img_path = "../img/cat.jpg"
 onnx_model_path = "../model/tf2flow_resnet50.onnx"
@@ -36,12 +38,15 @@ def save_tf_model_as_onnx():
     np.testing.assert_allclose(preds, onnx_pred[0], rtol=1e-3)
 
 def load_onnx_to_flow_model():
-    torch_model = convert(onnx_model_path)
+    new_onnx_model, _ = onnxsim.simplify(onnx_model_path)
+    new_onnx_model_path = "../model/tf2flow_resnet50-sim.onnx"
+    onnx.save(new_onnx_model, new_onnx_model_path)
+    torch_model = convert(new_onnx_model_path).to('mlu')
     img = image.load_img(img_path, target_size=(224, 224))
     x = image.img_to_array(img)
     x = np.expand_dims(x, axis=0)
     x = preprocess_input(x)
-    img = torch.from_numpy(x.copy())
+    img = torch.from_numpy(x.copy()).to('mlu')
     out_torch = torch_model(img)
 
     with open('../model/imagenet-classes.txt') as f:
