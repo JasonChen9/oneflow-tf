@@ -37,7 +37,7 @@ ONEFLOW_VM_MULTI_THREAD=0 python3 flow2tf.py
 ```
 //开启mock
 eval $(python3 -m oneflow.mock_torch --lazy)
-ONEFLOW_VM_MULTI_THREAD=0 python3 resnet50/tf2flow.py
+ONEFLOW_VM_MULTI_THREAD=0 python3 tf2flow.py
 ```
 
 ### oneflow convert to pytorch
@@ -60,6 +60,7 @@ cd gpt2
 ```
 git clone git@github.com:Oneflow-Inc/libai.git
 pip install pybind11
+cd libai
 pip install -e .
 ```
 接着，新建一个文件夹，并把 https://huggingface.co/Gustavosta/MagicPrompt-Stable-Diffusion/tree/main 下的 `config.json`、`merges.txt`、`pytorch_model.bin`、`vocab.json`这四个文件下载到这个文件夹中，假设这个文件夹路径为/home/xiangguangyu/onefow_gpt2_model。接着，我们修改 libai/projects/MagicPrompt/configs/gpt2_inference.py 中 /data/home/magicprompt 改为 /home/xiangguangyu/onefow_gpt2_model，并修改66，67行的
@@ -72,8 +73,8 @@ merges_file="/data/home/magicprompt/merges.txt",
 vocab_file="/data/home/xiangguangyu/oneflow_gpt2_model/vocab.json", 
 merges_file="/data/home/xiangguangyu/oneflow_gpt2_model/merges.txt"
 ```
-同时修改 libai/projects/MagicPrompt/pipeline.py 中的第99行为model_path="/home/xiangguangyu/onefow_gpt2_model"，并且把100行改成mode="libai"。
-最后把本项目的gpt2/flow2tf.py文件内容覆盖到libai/libai/onnx_export/gpt2_to_onnx.py中，运行libai/libai/onnx_export/gpt2_to_onnx.py即可执行转换。
+同时修改 libai/projects/MagicPrompt/pipeline.py 中的第100行为model_path="/home/xiangguangyu/onefow_gpt2_model"，并且把101行改成mode="libai"。
+最后把本项目的flow2tf.py文件内容覆盖到libai/libai/onnx_export/gpt2_to_onnx.py中，修改文件第39行指定为刚才创建的文件夹下model目录，并在刚才创建的文件夹下新建model，第63和100行，指定为本项目下model目录，例如/ssd/dataset/xgy/oneflow-tf/model/gpt2.onnx,运行libai/libai/onnx_export/gpt2_to_onnx.py即可执行转换。
 
 ### tensorflow convert to oneflow
 ```
@@ -83,6 +84,7 @@ ONEFLOW_VM_MULTI_THREAD=0 python3 tf2flow.py
 ```
 
 ### oneflow convert to pytorch
+ flow2pt.py运行依赖于oneflow convert to tensorflow环节中的flow2tf.py生成的gpt2.onnx
 ```
 ONEFLOW_VM_MULTI_THREAD=0 python3 flow2pt.py
 ```

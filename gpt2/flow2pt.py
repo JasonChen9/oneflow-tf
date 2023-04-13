@@ -7,7 +7,7 @@ from onnx_tf.backend import prepare
 
 def load_onnx_model_as_pt():
     torch_model = convert(
-        "/data/home/xiangguangyu/oneflow-tf/model/gpt2.onnx")  # load onnx model
+        "../model/gpt2.onnx")  # load onnx model
     output = torch_model(
         torch.ones([1,5], dtype=torch.int32)
     )
@@ -15,7 +15,7 @@ def load_onnx_model_as_pt():
 
 def load_onnx_model_as_tf():
     onnx_model = onnx.load(
-        "/data/home/xiangguangyu/oneflow-tf/model/gpt2.onnx")  # load onnx model
+        "../model/gpt2.onnx")  # load onnx model
     tf_model = prepare(onnx_model)
     input_ids = tf.ones(
         [1, 5], dtype=tf.int64

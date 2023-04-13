@@ -79,6 +79,7 @@ onnx==1.13.1
 onnx-simplifier==0.4.17
 onnx-tf==1.10.0
 onnxruntime==1.14.1
+onnxsim==0.4.19              
 opencv-python==4.7.0.72
 opt-einsum==3.3.0
 packaging==23.0
