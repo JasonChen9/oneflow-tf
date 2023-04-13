@@ -77,7 +77,7 @@ if __name__ == "__main__":
     gpt2_graph = gpt2Graph(model)
     # Build the static graph model
     input_ids = flow.ones(
-        1, 5, dtype=flow.int64, sbp=flow.sbp.broadcast, placement=flow.placement("cuda", ranks=[0])
+        1, 5, dtype=flow.int64, sbp=flow.sbp.broadcast, placement=flow.placement("mlu", ranks=[0])
     )
 
     # check your model.forward is valid

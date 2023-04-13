@@ -63,18 +63,20 @@ pip install pybind11
 cd libai
 pip install -e .
 ```
-接着，新建一个文件夹，并把 https://huggingface.co/Gustavosta/MagicPrompt-Stable-Diffusion/tree/main 下的 `config.json`、`merges.txt`、`pytorch_model.bin`、`vocab.json`这四个文件下载到这个文件夹中，假设这个文件夹路径为/home/xiangguangyu/onefow_gpt2_model。接着，我们修改 libai/projects/MagicPrompt/configs/gpt2_inference.py 中 /data/home/magicprompt 改为 /home/xiangguangyu/onefow_gpt2_model，并修改66，67行的
+接着，新建一个文件夹，并把 https://huggingface.co/Gustavosta/MagicPrompt-Stable-Diffusion/tree/main 下的 `config.json`、`merges.txt`、`pytorch_model.bin`、`vocab.json`这四个文件下载到这个文件夹中，假设这个文件夹名onefow_gpt2_model。接着，我们修改 libai/projects/MagicPrompt/configs/gpt2_inference.py 中/data/home/magicprompt 改为onefow_gpt2_model文件路径，并修改66，67行的
 ```
 vocab_file="/data/home/magicprompt/vocab.json", 
 merges_file="/data/home/magicprompt/merges.txt",
 ```
 改为刚才保存的模型
 ```
-vocab_file="/data/home/xiangguangyu/oneflow_gpt2_model/vocab.json", 
-merges_file="/data/home/xiangguangyu/oneflow_gpt2_model/merges.txt"
+vocab_file="path-to-oneflow_gpt2_model/vocab.json", 
+merges_file="path-to-oneflow_gpt2_model/merges.txt"
 ```
-同时修改 libai/projects/MagicPrompt/pipeline.py 中的第100行为model_path="/home/xiangguangyu/onefow_gpt2_model"，并且把101行改成mode="libai"。
-最后把本项目的flow2tf.py文件内容覆盖到libai/libai/onnx_export/gpt2_to_onnx.py中，修改文件第39行指定为刚才创建的文件夹下model目录，并在刚才创建的文件夹下新建model，第63和100行，指定为本项目下model目录，例如/ssd/dataset/xgy/oneflow-tf/model/gpt2.onnx,运行libai/libai/onnx_export/gpt2_to_onnx.py即可执行转换。
+同时修改 libai/projects/MagicPrompt/pipeline.py 中的第100行为model_path="path-to-onefow_gpt2_model"，并且把101行改成mode="libai"。修改libai/libai/utils/distributed.py的第74行为self._device_type = try_get_key(cfg, "device_type", default="mlu")。我们需要从https://oneflow-public.oss-cn-beijing.aliyuncs.com/datasets/libai/magicprompt/OneFlow-MagicPrompt-Stable_Diffusion.zip 这里下载模型解压到onefow_gpt2_model文件夹中。
+
+最后把本项目的flow2tf.py文件内容覆盖到libai/libai/onnx_export/gpt2_to_onnx.py中，修改文件第39行指定为刚才创建的文件夹oneflow_gpt2_model下的model目录，第63和100行，指定为本项目下model目录，例如path-
+to-oneflow-tf/model/gpt2.onnx,运行libai/libai/onnx_export/gpt2_to_onnx.py即可执行转换。
 
 ### tensorflow convert to oneflow
 ```
