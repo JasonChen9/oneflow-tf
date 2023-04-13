@@ -18,16 +18,16 @@ def save_tf_model_as_onnx():
 
     model.save_pretrained("../model/checkpoints/tfgpt2model", saved_model=True)
 
-    command = "python -m tf2onnx.convert --saved-model ../model/checkpoints/tfgpt2model/saved_model/1 --opset 11  --output ../model/tf2flow_gpt2.onnx"
+    command = "python3 -m tf2onnx.convert --saved-model ../model/checkpoints/tfgpt2model/saved_model/1 --opset 11  --output ../model/tf2flow_gpt2.onnx"
 
     os.system(command)
 
 def load_onnx_to_flow_model():
     onnx_model = onnx.load(onnx_model_path)
-    flow_model = ConvertModel(onnx_model)
+    flow_model = ConvertModel(onnx_model).to('mlu')
     output = flow_model(
-        attention_mask=torch.ones([1,5], dtype=torch.int32),
-        input_ids=torch.ones([1,5], dtype=torch.int32)
+        attention_mask=torch.ones([1,5], dtype=torch.int32).to('mlu'),
+        input_ids=torch.ones([1,5], dtype=torch.int32).to('mlu')
     )
 
     providers = ['CPUExecutionProvider']
