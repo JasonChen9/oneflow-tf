@@ -56,28 +56,27 @@ ONEFLOW_VM_MULTI_THREAD=0 python3 test_pt2flow.py
 cd gpt2
 ```
 ### oneflow convert to tensorflow
-使用libai运行gpt2并进行转化。libai的gpt2推理实现是在projects/MagicPrompt文件夹中，通过以下命令安装libai：
+使用libai运行gpt2并进行转化。libai的gpt2推理实现是在projects/MagicPrompt文件夹中，通过以下命令安装：
 ```
-git clone git@github.com:Oneflow-Inc/libai.git
+git clone --recursive https://github.com/Oneflow-Inc/oneflow-cambricon-models.git
+cd oneflow-cambricon-models/libai
 pip install pybind11
-cd libai
 pip install -e .
 ```
-接着，新建一个文件夹，并把 https://huggingface.co/Gustavosta/MagicPrompt-Stable-Diffusion/tree/main 下的 `config.json`、`merges.txt`、`pytorch_model.bin`、`vocab.json`这四个文件下载到这个文件夹中，假设这个文件夹名onefow_gpt2_model。接着，我们修改 libai/projects/MagicPrompt/configs/gpt2_inference.py 中/data/home/magicprompt 改为onefow_gpt2_model文件路径，并修改66，67行的
-```
-vocab_file="/data/home/magicprompt/vocab.json", 
-merges_file="/data/home/magicprompt/merges.txt",
-```
-改为刚才保存的模型
-```
-vocab_file="path-to-oneflow_gpt2_model/vocab.json", 
-merges_file="path-to-oneflow_gpt2_model/merges.txt"
-```
-同时修改 libai/projects/MagicPrompt/pipeline.py 中的第100行为model_path="path-to-onefow_gpt2_model"，并且把101行改成mode="libai"。修改libai/libai/utils/distributed.py的第74行为self._device_type = try_get_key(cfg, "device_type", default="mlu")。我们需要从https://oneflow-public.oss-cn-beijing.aliyuncs.com/datasets/libai/magicprompt/OneFlow-MagicPrompt-Stable_Diffusion.zip 这里下载模型解压到onefow_gpt2_model文件夹中。
 
-最后把本项目的flow2tf.py文件内容覆盖到libai/libai/onnx_export/gpt2_to_onnx.py中，修改文件第39行指定为刚才创建的文件夹oneflow_gpt2_model下的model目录，第63和100行，指定为本项目下model目录，例如path-
-to-oneflow-tf/model/gpt2.onnx,运行libai/libai/onnx_export/gpt2_to_onnx.py即可执行转换。
+libai的gpt2推理实现是在projects/MagicPrompt文件夹中，这个Magicprompt是我们自己用gpt2预训练后做推理的项目，用于将一个简单的句子转换成stable diffusion的咒语。接着把从 https://oneflow-static.oss-cn-beijing.aliyuncs.com/oneflow-model.zip 这里下载的模型解压到任意路径，并在 libai/ 下全局搜索/data/home/magicprompt将其替换为解压后的模型路径。
 
+修改oneflow_onnx/oneflow2onnx/util.py的178行为`device_kwargs = dict(sbp=flow.sbp.broadcast, placement=flow.placement("mlu", ranks=[0]))`
+
+修改projects/MagicPrompt/configs/gpt2_inference.py文件中67，68行以及projects/MagicPrompt/pipeline.py文件的99行为
+之前模型解压路径。
+
+最后把本项目的flow2tf.py文件内容覆盖到libai/onnx_export/gpt2_to_onnx.py中，修改文件第39行指定为之前模型解压路径下的model目录，第63和100行，指定为oneflow-tf/model目录下的onnx生成路径，例如path-
+to/oneflow-tf/model/gpt2.onnx,然后就可以运行模型转换脚本。
+```
+python3 libai/onnx_export/gpt2_to_onnx.py 
+```
+即可执行转换和验证，之后回到本项目的gpt2目录中。
 ### tensorflow convert to oneflow
 ```
 //开启mock
