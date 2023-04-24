@@ -22,6 +22,7 @@ def transform(image):
 
 def predict(model, image, k):
     predictions = model(transform(image)).softmax()
+    np.save('mxnet_resnet50.npy', predictions[0].asnumpy())
     top_pred = predictions.topk(k=k)[0].asnumpy()
     for index in top_pred:
         with open('../model/imagenet-classes.txt') as f:

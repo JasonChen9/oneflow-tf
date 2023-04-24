@@ -94,3 +94,35 @@ ONEFLOW_VM_MULTI_THREAD=0 python3 flow2pt.py
 ```
 ONEFLOW_VM_MULTI_THREAD=0 python3 test_pt2flow.py
 ``` 
+
+### caffe & Mxnet convert to oneflow
+```
+//安装依赖环境和依赖库,注意由于需要安装caffe，因此需要一个全新的python3.7环境
+conda create -n caffe-mxnet python=3.7
+conda activate caffe-mxnet
+conda install caffe
+pip install mxnet
+pip install protobuf==3.19.6
+pip install onnx==1.10.2
+pip install onnxruntime
+
+//导入依赖库
+git clone https://github.com/JasonChen9/caffe-onnx.git
+cd caffe-onnx
+
+//下载caffe的resnet50模型到caffe-onnx下的caffe_model/resnet-50路径下
+wget 。。。。
+
+
+//运行caffe2onnx.py 生成caffe的resnet-50 onnx模型
+python caffe2onnx.py
+
+//运行mxnet2onnx.py 生成mxnet的resnet-50 onnx模型
+python mxnet2onnx.py
+
+
+//回到oneflow环境，开启mock，从onnx导入到oneflow，并验证结果
+conda activate flow-pt-tf
+eval $(python3 -m oneflow.mock_torch --lazy)
+ONEFLOW_VM_MULTI_THREAD=0 python3 onnx2flow.py
+```
