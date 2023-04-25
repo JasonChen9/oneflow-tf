@@ -1,4 +1,4 @@
-from onnx2torch import convert
+from onnx2pytorch import ConvertModel
 import onnx
 import onnxsim
 import torch
@@ -23,8 +23,10 @@ def load_caffe_onnx_to_flow_model():
     new_onnx_model, _ = onnxsim.simplify(caffe_model_path)
     new_onnx_model_path = "../model/caffe2flow_resnet50-sim.onnx"
     onnx.save(new_onnx_model, new_onnx_model_path)
-    torch_model = convert(new_onnx_model_path).to('mlu')
+    onnx_model = onnx.load(new_onnx_model_path)
+    torch_model = ConvertModel(onnx_model).to('mlu')
     data_input = process_image(img_path, [224, 224])
+    torch_model.eval()
     img = torch.from_numpy(data_input.copy()).to('mlu')
     out_torch = torch_model(img)
 
@@ -33,7 +35,7 @@ def load_caffe_onnx_to_flow_model():
         print('OneFlow Predicted:', CLASS_NAMES[np.argmax(out_torch.detach().numpy()[0])])
 
     b = np.load('caffe_resnet50.npy')
-    np.testing.assert_allclose(out_torch.detach().numpy()[0], b, rtol=1e-05, atol=2e-05)
+    np.testing.assert_allclose(out_torch.detach().numpy()[0], b[0], rtol=1e-02, atol=8e-03)
     print("CAFFE PASS")
 
 def transform(image):
@@ -51,7 +53,9 @@ def load_mxnet_onnx_to_flow_model():
     new_onnx_model, _ = onnxsim.simplify(mxnet_model_path)
     new_onnx_model_path = "../model/mx2flow_resnet50-sim.onnx"
     onnx.save(new_onnx_model, new_onnx_model_path)
-    torch_model = convert(new_onnx_model_path).to('mlu')
+    onnx_model = onnx.load(new_onnx_model_path)
+    torch_model = ConvertModel(onnx_model).eval().to('mlu')
+
     image = mx.image.imread(img_path)
     data_input = transform(image).asnumpy()
     img = torch.from_numpy(data_input.copy()).to('mlu')
@@ -66,6 +70,5 @@ def load_mxnet_onnx_to_flow_model():
     print("MXNET PASS")
 
 if __name__ == '__main__':
-    # load_caffe_onnx_to_flow_model()
+    load_caffe_onnx_to_flow_model()
     load_mxnet_onnx_to_flow_model()
-

@@ -4,7 +4,6 @@ from mxnet import gluon, nd
 from mxnet.gluon.model_zoo import vision
 import numpy as np
 
-
 onnx_model_path = "../model/mx2flow_resnet50.onnx"
 img_path = "../img/cat.jpg"
 
@@ -21,8 +20,9 @@ def transform(image):
 
 
 def predict(model, image, k):
-    predictions = model(transform(image)).softmax()
+    predictions = model(transform(image))
     np.save('mxnet_resnet50.npy', predictions[0].asnumpy())
+    predictions.softmax()
     top_pred = predictions.topk(k=k)[0].asnumpy()
     for index in top_pred:
         with open('../model/imagenet-classes.txt') as f:
@@ -55,5 +55,3 @@ def save_caffe_model_to_onnx():
 
 if __name__ == '__main__':
     save_caffe_model_to_onnx()
-
-
