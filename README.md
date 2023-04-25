@@ -111,8 +111,10 @@ git clone https://github.com/JasonChen9/caffe-onnx.git
 cd caffe-onnx
 
 //下载caffe的resnet50模型到caffe-onnx下的caffe_model/resnet-50路径下
-wget 。。。。
-
+wget https://oneflow-static.oss-cn-beijing.aliyuncs.com/resnet50-caffe/resnet-50-model.caffemodel
+wget https://oneflow-static.oss-cn-beijing.aliyuncs.com/resnet50-caffe/resnet-50-model.prototxt
+mv resnet-50-model.caffemodel caffe_model/resnet-50/
+mv resnet-50-model.prototxt caffe_model/resnet-50/
 
 //运行caffe2onnx.py 生成caffe的resnet-50 onnx模型
 python caffe2onnx.py
