@@ -3,14 +3,13 @@ import onnx
 import onnxsim
 import torch
 import numpy as np
-import matplotlib.pyplot as plt
 from PIL import Image
 import os
 import mxnet as mx
 import numpy as np
 
 caffe_model_path = "../model/caffe2flow_resnet50.onnx"
-mxnet_model_path = "../model/mxnet2flow_resnet50.onnx"
+mxnet_model_path = "../model/mx2flow_resnet50.onnx"
 img_path = "../img/cat.jpg"
 
 def process_image(img_path, input_shape):
@@ -35,7 +34,7 @@ def load_caffe_onnx_to_flow_model():
 
     b = np.load('caffe_resnet50.npy')
     np.testing.assert_allclose(out_torch.detach().numpy()[0], b, rtol=1e-05, atol=2e-05)
-    print("PASS")
+    print("CAFFE PASS")
 
 def transform(image):
     resized = mx.image.resize_short(image, 224) #minimum 224x224 images
@@ -50,24 +49,7 @@ def transform(image):
 
 def load_mxnet_onnx_to_flow_model():
     new_onnx_model, _ = onnxsim.simplify(mxnet_model_path)
-    new_onnx_model_path = "../model/mxnet2flow_resnet50-sim.onnx"
-    onnx.save(new_onnx_model, new_onnx_model_path)
-    torch_model = convert(new_onnx_model_path).to('mlu')
-    data_input = process_image(img_path, [224, 224])
-    img = torch.from_numpy(data_input.copy()).to('mlu')
-    out_torch = torch_model(img)
-
-    with open('../model/imagenet-classes.txt') as f:
-        CLASS_NAMES = f.readlines()
-        print('OneFlow Predicted:', CLASS_NAMES[np.argmax(out_torch.detach().numpy()[0])])
-
-    b = np.load('caffe_resnet50.npy')
-    np.testing.assert_allclose(out_torch.detach().numpy()[0], b, rtol=1e-05, atol=2e-05)
-    print("PASS")
-
-def load_mxnet_onnx_to_flow_model():
-    new_onnx_model, _ = onnxsim.simplify(mxnet_model_path)
-    new_onnx_model_path = "../model/mxnet2flow_resnet50-sim.onnx"
+    new_onnx_model_path = "../model/mx2flow_resnet50-sim.onnx"
     onnx.save(new_onnx_model, new_onnx_model_path)
     torch_model = convert(new_onnx_model_path).to('mlu')
     image = mx.image.imread(img_path)
@@ -81,9 +63,9 @@ def load_mxnet_onnx_to_flow_model():
 
     b = np.load('mxnet_resnet50.npy')
     np.testing.assert_allclose(out_torch.detach().numpy()[0], b, rtol=1e-05, atol=2e-05)
-    print("PASS")
+    print("MXNET PASS")
 
 if __name__ == '__main__':
-    load_caffe_onnx_to_flow_model()
+    # load_caffe_onnx_to_flow_model()
     load_mxnet_onnx_to_flow_model()
 

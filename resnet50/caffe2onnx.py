@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from PIL import Image
 import caffe
 import os
@@ -8,8 +8,8 @@ caffe.set_mode_cpu()
 
 model_path = "../model/caffe2flow_resnet50.onnx"
 img_path = "../img/cat.jpg"
-MODEL_FILE = "/data/home/xiangguangyu/oneflow-tf/resnet50/caffe-onnx/caffemodel/resnet-50/resnet-50-model.prototxt"
-PRETRAINED = "/data/home/xiangguangyu/oneflow-tf/resnet50/caffe-onnx/caffemodel/resnet-50/resnet-50-model.caffemodel"
+MODEL_FILE = "caffe-onnx/caffemodel/resnet-50/resnet-50-model.prototxt"
+PRETRAINED = "caffe-onnx/caffemodel/resnet-50/resnet-50-model.caffemodel"
 
 def process_image(img_path, input_shape):
     img = Image.open(img_path).convert("RGB")

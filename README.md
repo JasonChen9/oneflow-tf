@@ -113,14 +113,17 @@ cd caffe-onnx
 //下载caffe的resnet50模型到caffe-onnx下的caffe_model/resnet-50路径下
 wget https://oneflow-static.oss-cn-beijing.aliyuncs.com/resnet50-caffe/resnet-50-model.caffemodel
 wget https://oneflow-static.oss-cn-beijing.aliyuncs.com/resnet50-caffe/resnet-50-model.prototxt
-mv resnet-50-model.caffemodel caffe_model/resnet-50/
-mv resnet-50-model.prototxt caffe_model/resnet-50/
+mv resnet-50-model.caffemodel caffemodel/resnet-50/
+mv resnet-50-model.prototxt caffemodel/resnet-50/
+
+//回到resnet50目录
+cd ..
 
 //运行caffe2onnx.py 生成caffe的resnet-50 onnx模型
-python caffe2onnx.py
+ONEFLOW_VM_MULTI_THREAD=0 python3 caffe2onnx.py
 
 //运行mxnet2onnx.py 生成mxnet的resnet-50 onnx模型
-python mxnet2onnx.py
+ONEFLOW_VM_MULTI_THREAD=0 python3 mxnet2onnx.py
 
 
 //回到oneflow环境，开启mock，从onnx导入到oneflow，并验证结果
