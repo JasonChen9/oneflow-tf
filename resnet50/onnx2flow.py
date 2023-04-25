@@ -53,7 +53,7 @@ def load_mxnet_onnx_to_flow_model():
     onnx.save(new_onnx_model, new_onnx_model_path)
     torch_model = convert(new_onnx_model_path).to('mlu')
     image = mx.image.imread(img_path)
-    data_input = transform(image)
+    data_input = transform(image).asnumpy()
     img = torch.from_numpy(data_input.copy()).to('mlu')
     out_torch = torch_model(img)
 
