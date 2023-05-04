@@ -4,6 +4,7 @@ import numpy as np
 import cv2
 from onnx2torch import convert
 from torchvision.models import resnet50, ResNet50_Weights
+import time
 
 onnx_model_path = "../model/pt2flow_resnet50.onnx"
 img_path = "../img/cat.jpg"
@@ -71,7 +72,12 @@ def load_onnx_model_as_flow():
     img = preprocess_image(img)
 
     img = torch.from_numpy(img.copy()).to(device)
-    output = torch_model(img)
+    if is_oneflow: print("运行中... 请通过 cnmon 命令查看显存占用")
+    if is_oneflow: start_time = time.time()
+    for i in range(10):
+        output = torch_model(img)
+    if is_oneflow: end_time = time.time()
+    if is_oneflow: print("运行结束,共运行 10 次，平均速度为 {:.2f}ms".format((end_time - start_time)* 100))
 
     with open('../model/imagenet-classes.txt') as f:
         CLASS_NAMES = f.readlines()
@@ -85,5 +91,3 @@ if __name__ == '__main__':
         load_onnx_model_as_flow()
     else:
         save_pt_model_as_onnx()
-
-

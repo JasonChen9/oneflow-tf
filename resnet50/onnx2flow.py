@@ -7,6 +7,7 @@ from PIL import Image
 import os
 import mxnet as mx
 import numpy as np
+import time
 
 caffe_model_path = "../model/caffe2flow_resnet50.onnx"
 mxnet_model_path = "../model/mx2flow_resnet50.onnx"
@@ -28,7 +29,13 @@ def load_caffe_onnx_to_flow_model():
     data_input = process_image(img_path, [224, 224])
     torch_model.eval()
     img = torch.from_numpy(data_input.copy()).to('mlu')
-    out_torch = torch_model(img)
+    print("运行中... 请通过 cnmon 命令查看显存占用")
+    start_time = time.time()
+    for i in range(10):
+        out_torch = torch_model(img)
+
+    end_time = time.time()
+    print("运行结束,共运行 10 次，平均速度为 {:.2f}ms".format((end_time - start_time)* 100))
 
     with open('../model/imagenet-classes.txt') as f:
         CLASS_NAMES = f.readlines()
@@ -36,7 +43,7 @@ def load_caffe_onnx_to_flow_model():
 
     b = np.load('caffe_resnet50.npy')
     np.testing.assert_allclose(out_torch.detach().numpy()[0], b[0], rtol=1e-02, atol=8e-03)
-    print("CAFFE PASS")
+    print("精度验证通过")
 
 def transform(image):
     resized = mx.image.resize_short(image, 224) #minimum 224x224 images
@@ -59,15 +66,22 @@ def load_mxnet_onnx_to_flow_model():
     image = mx.image.imread(img_path)
     data_input = transform(image).asnumpy()
     img = torch.from_numpy(data_input.copy()).to('mlu')
-    out_torch = torch_model(img)
+    print("运行中... 请通过 cnmon 命令查看显存占用")
+    start_time = time.time()
 
+    for i in range(10):
+        out_torch = torch_model(img)
+
+    end_time = time.time()
+
+    print("运行结束,共运行 10 次，平均速度为 {:.2f}ms".format((end_time - start_time)* 100))
     with open('../model/imagenet-classes.txt') as f:
         CLASS_NAMES = f.readlines()
         print('OneFlow Predicted:', CLASS_NAMES[np.argmax(out_torch.detach().numpy()[0])])
 
     b = np.load('mxnet_resnet50.npy')
     np.testing.assert_allclose(out_torch.detach().numpy()[0], b, rtol=1e-05, atol=2e-05)
-    print("MXNET PASS")
+    print("精度验证通过")
 
 if __name__ == '__main__':
     load_caffe_onnx_to_flow_model()
