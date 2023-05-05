@@ -9,7 +9,7 @@ conda create -n flow-pt-tf python=3.8
 conda activate flow-pt-tf
 
 //正确安装寒武纪版本oneflow。下述命令仅作为参考，具体安装方式请参考寒武纪版本oneflow相关文档
-python3 -m pip install --pre oneflow -f https://staging.oneflow.info/branch/master/cu117
+python3 -m pip install --pre oneflow -f https://staging.oneflow.info/branch/dev_cambricon_mlu/mlu
 
 //安装相关依赖库
 while read requirement; do  pip install $requirement -i https://pypi.tuna.tsinghua.edu.cn/simple; done < requirements.txt
