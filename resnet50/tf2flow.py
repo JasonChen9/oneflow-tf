@@ -23,7 +23,7 @@ def save_tf_model_as_onnx():
 
     preds = model.predict(x)
     np.save('tf_resnet50.npy', preds[0])
-    print('Keras Predicted:', decode_predictions(preds, top=3)[0])
+    print('TensorFlow Predicted:', decode_predictions(preds, top=3)[0])
 
     spec = (tf.TensorSpec((None, 224, 224, 3), tf.float32, name="input"),)
 
