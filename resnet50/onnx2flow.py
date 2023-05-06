@@ -21,7 +21,7 @@ def process_image(img_path, input_shape):
     return image
 
 def load_caffe_onnx_to_flow_model():
-    new_onnx_model, _ = onnxsim.simplify(caffe_model_path)
+    new_onnx_model = onnx.load(caffe_model_path)
     new_onnx_model_path = "../model/caffe2flow_resnet50-sim.onnx"
     onnx.save(new_onnx_model, new_onnx_model_path)
     onnx_model = onnx.load(new_onnx_model_path)
@@ -57,7 +57,7 @@ def transform(image):
     return batchified
 
 def load_mxnet_onnx_to_flow_model():
-    new_onnx_model, _ = onnxsim.simplify(mxnet_model_path)
+    new_onnx_model = onnx.load(mxnet_model_path)
     new_onnx_model_path = "../model/mx2flow_resnet50-sim.onnx"
     onnx.save(new_onnx_model, new_onnx_model_path)
     onnx_model = onnx.load(new_onnx_model_path)
